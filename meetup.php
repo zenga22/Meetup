@@ -363,7 +363,8 @@ class Meetup
     	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
     	curl_setopt($ch, CURLOPT_TIMEOUT, 120);
     	curl_setopt($ch, CURLOPT_HEADER, false);
-    	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    	if ( isset($_SERVER['HTTP_USER_AGENT']) ) curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+    	else curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0');
     	
     	//either GET/POST/PUT/DELETE against api
     	if($action==self::GET || $action==self::DELETE)
