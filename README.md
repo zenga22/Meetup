@@ -1,5 +1,5 @@
 # Meetup API
-This a very simple, one-file, PHP client for accessing most of the [Meetup API](http://www.meetup.com/meetup_api/).  Some parameters are included behind the scenes so you don't have to using array_merge when the parameters have fixed values like signed or response_type depending on the nature of the request.
+This a very simple, one-file, PHP client for accessing most of the [Meetup API](http://www.meetup.com/meetup_api/) **v3**.  Some parameters are included behind the scenes so you don't have to using array_merge when the parameters have fixed values like signed or response_type depending on the nature of the request. Autentication is not required for all calls, but information returned maybe limited.
 
 The code is documented to include more information along with small code snippets in the documentation where applicable.  This library supports OATH, api key, get/put/delete calls, and has several useful stub methods for accessing API functionality from meetup.  There's documentation and comments in the code and a detailed README to help you get started easily using the library.
 
@@ -9,8 +9,10 @@ Exceptions are thrown and can be caught when there's any errors interacting with
 ```php
 try
 {
-   $meetup = new Meetup('<api key>');
-   $meetup->getEvents();
+   $meetup = new Meetup();
+   $meetup->getEvents(array(
+	'urlname' => '<group url name>'
+));
 }
 catch(Exception $e)
 {
@@ -23,17 +25,17 @@ Underneath there's parameters (depending on the request being made) that get inj
 
 ## Quick Start
 
-* Get your [API key](http://www.meetup.com/meetup_api/key/).
+* API key is no longer supported by meetup.com
 * Limited information returned on GET requests (ie may not get private event or member details unless authorized)
 * Require the library, create a Meetup object and set your key:
 
 ```php
 require 'meetup.php';
-$meetup = new Meetup(array(
-	'key' => '<api key>'
-));
+$meetup = new Meetup();
 
-$response = $meetup->getEvents(); //somewhat restricted
+$response = $meetup->getEvents(array(
+	'urlname' => '<group url name>'
+)); //somewhat restricted
 ```
 
 * Get your [Consumer details](https://secure.meetup.com/meetup_api/oauth_consumers/).
@@ -87,15 +89,16 @@ else
 }
 ```
 
-* Retrieve some events:
+* Retrieve some events (see [documentation](https://www.meetup.com/meetup_api/docs/:urlname/events/#list) for more options):
 
 ```php
 $response = $meetup->getEvents(array(
 	'group_urlname' => 'YOUR-MEETUP-GROUP'
 ));
 
-// total number of items matching the get request
-$total_count = $response->meta->total_count;
+// total number of items matching the get request is encoded in HTTP headers.
+// Number of events returned.  Defaults to 200, but can be set using the  parameter.
+$event_count = count($response);
 
 foreach ($response->results as $event) 
 {
@@ -140,32 +143,32 @@ You can call any [Meetup API method](http://www.meetup.com/meetup_api/docs/) usi
 ### Arguments
 The method `get()`,`put()`,`post()`,`delete()` takes two arguments, of which the second one is optional:
 
-1. `(string)` Meetup API method (e.g. `/2/events`)
+1. `(string)` Meetup API method (e.g. `/:urlname/events`)
 2. `(array)` Meetup API method paramaters (e.g. `array('group_urlname' => 'your-meetup-group')`)
 
 ### Path parameters
 If the Meetup API method you need requires paramaters in it's path (like `/:urlname/boards`) you can pass the API method with the parameters already in their place (e.g. `/your-meetup-group/boards`) or provide the parameters in the second argument.  (e.g. `array('urlname' => 'your-meetup-group')`). I would suggest using the latter method.
 
 ### Response
-If an error occures, the client will throw an Exception giving usefull information about what exactly went wrong.
+If an error occures, the client will throw an Exception giving useful information about what exactly went wrong.
 
-If all is OK, it will return the JSON decoded response. This will be an `(object)` for version 2 methods and an `(array)` as far as I know.
+The current version of the API, **v3**, serializes all responses as JSON with relevant metadata encoded as HTTP headers with the response. 
 
 ## Available short-hands
-I've added just a few short-hand methods. If you check out the code you'll see they're all one-liners that simply call the general `get()` method and the version 2 ones filter out the `results` variable you need from the API response.
+I've added just a few short-hand methods. If you check out the code you'll see they're all one-liners that simply call the general `get()` method.
 
 Feel free to fork the code and add more!
 
 |Client method        |API method                         |
 |---------------------|-----------------------------------|
-| getEvents           | /2/events                         |
-| getGroups           | /2/groups                         |
-| getMembers          | /2/members                        |
-| getPhotos           | /2/photos                         |
+| getEvents           | /:urlname/events                  |
+| getGroups           | /:urlname/                        |
+| getMembers          | /:urlname/members                 |
+| getPhotos           | /:urlname/photos                  |
 | getDiscussionBoards | /:urlname/boards                  |
 | getDiscussions      | /:urlname/boards/:bid/discussions |
-| postEvent           | /event/:id                        |
-| deleteEvent         | /event/:id                        |
+| postEvent           | /:urlname/event/                  |
+| deleteEvent         | /:urlname/event/:id               |
 
 ## Roadmap
 * Add more short-hands.
@@ -186,6 +189,7 @@ This is a more simplified library for access and interactions covering OATH and 
 
 <pre>
 Copyright 2013 Fokke Zandbergen
+Copyright 2019 Dirk Huizenga
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

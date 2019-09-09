@@ -50,6 +50,8 @@ class Meetup
     * @var mixed
    */           
     protected $_response = null;
+    
+	
    /**
     * Constructor
     * @param array $parameters The parameters passed during construction
@@ -63,12 +65,12 @@ class Meetup
     * Stub for fetching events
     *
     * @param array $parameters The parameters passed for this request
-    * @return mixed A json object containing response data
+    * @return mixed A json object containing event data
     * @throws Exception if anything goes wrong
    */  
     public function getEvents(array $parameters = array()) 
     {
-        return $this->get('/2/events', $parameters);
+        return $this->get('/:urlname/events', $parameters);
     }
    /**
     * Stub for fetching groups
@@ -79,7 +81,7 @@ class Meetup
    */  
     public function getGroups(array $parameters = array()) 
     {
-        return $this->get('/2/groups', $parameters);
+        return $this->get('/:urlname', $parameters);
     }
     /**
     * Stub for fetching photos
@@ -90,7 +92,7 @@ class Meetup
    */     
     public function getPhotos(array $parameters = array())
     {
-        return $this->get('/2/photos', $parameters);
+        return $this->get('/:urlname/photos', $parameters);
     }
    /**
     * Stub for fetching discussion boards
@@ -123,7 +125,7 @@ class Meetup
    */     
     public function getMembers(array $parameters = array()) 
     {
-        return $this->get('/2/members', $parameters);
+        return $this->get('/:urlname/members', $parameters);
     }
    /**
     * Stub for grabbing the next response data if it's available in the meta information
@@ -163,7 +165,7 @@ class Meetup
     */   
      public function postEvent(array $parameters = array())
      {
-     	return $this->post('/2/event', $parameters);
+     	return $this->post('/:urlname/event', $parameters);
      }
    /**
     * Stub for updating an event
@@ -174,7 +176,7 @@ class Meetup
    */   
     public function updateEvent(array $parameters = array())
     {
-    	return $this->post('/2/event/:id', $parameters);
+    	return $this->post('/:urlname/event/:id', $parameters);
     }
    /**
     * Stub for deleting an event
@@ -185,7 +187,7 @@ class Meetup
    */       
     public function deleteEvent(array $parameters = array())
     {
-    	return $this->delete('/2/event/:id', $parameters);
+    	return $this->delete('/:urlname/event/:id', $parameters);
     }   
    /**
     * Perform a get on any url supported by meetup, use : to specify parameters that use
@@ -196,8 +198,8 @@ class Meetup
     * @throws Exception if anything goes wrong
     *
     * @code 
-    * $meetup->get('/2/event/:id', array('id'=>10));
-    * $meetup->get('/2/members', array('group_urlname'=>'foobar'));
+    * $meetup->get('/:urlname/event/:id', array('id'=>10));
+    * $meetup->get('/:urlname/members', array('group_urlname'=>'foobar'));
     * @endcode
    */            
     public function get($path, array $parameters = array())
@@ -215,7 +217,7 @@ class Meetup
     * @throws Exception if anything goes wrong
     *
     * @code 
-    * $meetup->post('/2/member/:id', array('id'=>10));
+    * $meetup->post('/:urlname/member/:id', array('id'=>10));
     * @endcode
    */                
     public function post($path, array $parameters = array())
@@ -249,7 +251,7 @@ class Meetup
     * @throws Exception if anything goes wrong
     *
     * @code 
-    * $meetup->delete('/2/member/:id', array('id'=>10));
+    * $meetup->delete('/:urlname/member/:id', array('id'=>10));
     * @endcode
    */  
     public function delete($path, array $parameters = array())
