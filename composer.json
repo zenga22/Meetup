@@ -1,7 +1,7 @@
 {
     "name": "zenga22/Meetup",
     "type": "library",
-    "description": "PHP client for accessing most of the Meetup API",
+    "description": "PHP client for accessing most of the Meetup API v3",
     "keywords": ["meetup"],
     "homepage": "https://github.com/zenga22/Meetup",
     "license": "Apache-2.0",
